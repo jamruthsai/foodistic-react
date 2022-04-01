@@ -4,11 +4,22 @@ import PropTypes from "prop-types";
 //lodash
 import _noop from "lodash/noop";
 
+// icons
+// icon
+import ratingIcon from "../../../../assets/icons/star.svg";
+
 // css
 import "./header.css";
 
 const Header = (props) => {
-  const { name, category, street, locality, renderAdditionalInfo } = props;
+  const {
+    name,
+    category,
+    street,
+    locality,
+    additionalInfo,
+    renderAdditionalInfo,
+  } = props;
 
   return (
     <div className="restaurant-about flex-column justify-content-center">
@@ -21,7 +32,9 @@ const Header = (props) => {
       <p>
         {street}, {locality}
       </p>
-      <div className="flex align-items-center">{renderAdditionalInfo()}</div>
+      <div className="flex align-items-center">
+        {renderAdditionalInfo({ ...additionalInfo, ratingIcon })}
+      </div>
     </div>
   );
 };

@@ -1,12 +1,9 @@
 // lodash
 import _last from "lodash/last";
-import _trim from "lodash/trim";
-import _lowerCase from "lodash/lowerCase";
-import _replace from "lodash/replace";
 import _reduce from "lodash/reduce";
 
 //helpers
-import { compose } from "../../../utility/helpers";
+import { generateUrl } from "../../../utility/helpers";
 
 // constants
 const ROOT_URL = "/city";
@@ -20,10 +17,6 @@ const INITIAL_CRUMB = {
 const isLastItem = (items, item) => {
   return _last(items) === item;
 };
-
-const replace = (text) => _replace(text, /\s+/g, "");
-
-const generateUrl = compose(replace, _lowerCase, _trim);
 
 const getLastItemPath = (list, index) => {
   return index > 0 ? list[index - 1].path : ROOT_URL;
