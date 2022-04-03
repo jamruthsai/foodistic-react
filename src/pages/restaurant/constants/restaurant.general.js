@@ -1,7 +1,7 @@
 export const INITIAL_STATE = {
   dishItems: null,
   restaurantDetails: null,
-  error: null,
+  hasError: false,
   isLoading: true,
 };
 

@@ -5,21 +5,13 @@ import PropTypes from "prop-types";
 import _noop from "lodash/noop";
 
 // icons
-// icon
 import ratingIcon from "../../../../assets/icons/star.svg";
 
 // css
 import "./header.css";
 
 const Header = (props) => {
-  const {
-    name,
-    category,
-    street,
-    locality,
-    additionalInfo,
-    renderAdditionalInfo,
-  } = props;
+  const { name, category, street, locality, renderAdditionalInfo } = props;
 
   return (
     <div className="restaurant-about flex-column justify-content-center">
@@ -33,7 +25,7 @@ const Header = (props) => {
         {street}, {locality}
       </p>
       <div className="flex align-items-center">
-        {renderAdditionalInfo({ ...additionalInfo, ratingIcon })}
+        {renderAdditionalInfo(ratingIcon)}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
-export const INITIAL_STATE = {
-  hashChanged: false,
-};
+// INITIAL STATES
+export const INITIAL_INDEX = null;
+
+export const SCROLL_FACTOR = 2.1875;

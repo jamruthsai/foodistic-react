@@ -1,5 +1,5 @@
 // react
-import React from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // prop-types
 import PropTypes from "prop-types";
@@ -8,56 +8,63 @@ import PropTypes from "prop-types";
 import _map from "lodash/map";
 
 // constants
-import { INITIAL_STATE } from "./constants/sidebar.general";
+import { INITIAL_INDEX, SCROLL_FACTOR } from "./constants/sidebar.general";
 
 //helpers
-import { checkEqualityWithHash, isHashEmpty } from "./helpers/sidebar.helpers";
-import { generateUrl } from "../../utility/helpers";
+import { sanitizeText } from "../../utility/sanitizeText";
+import { getMatchedIndexWithUrlHash } from "./helpers/sidebar.general";
 
 // components
-import LinkItem from "./components/linkItem";
+import LinkItem from "../linkItem";
 
 // css
 import "./sidebar.css";
 
-class Sidebar extends React.Component {
-  state = INITIAL_STATE;
+const Sidebar = (props) => {
+  const { links, className } = props;
 
-  componentDidMount() {
-    window.addEventListener("hashchange", this.handleHashChange);
-  }
+  const [activeIdx, setActiveIdx] = useState(INITIAL_INDEX);
 
-  componentWillUnmount() {
-    window.removeEventListener("hashchange", this.handleHashChange);
-  }
+  const setInitialActiveIdx = useCallback(() => {
+    const index = getMatchedIndexWithUrlHash(links);
+    setActiveIdx(index);
+  }, [links]);
 
-  handleHashChange = () => {
-    this.setState({
-      hashChanged: true,
-    });
+  useEffect(() => {
+    setInitialActiveIdx();
+  }, [setInitialActiveIdx]);
+
+  const handleClick = (index) => {
+    setActiveIdx(index);
   };
 
-  renderLink = (label, index) => {
-    const { hashChanged } = this.state;
-    const url = generateUrl(label);
-    let isEqual = checkEqualityWithHash(url);
+  const renderLink = (label, index) => {
+    const sanitizedText = sanitizeText(label);
 
-    if (!hashChanged && isHashEmpty() && index === 0) {
-      isEqual = true;
-    }
+    const isActive = activeIdx === index;
 
-    return <LinkItem key={label} label={label} url={url} isActive={isEqual} />;
-  };
-
-  render() {
-    const { links, className } = this.props;
     return (
-      <div className={`sidebar-nav-links ${className}`}>
-        {_map(links, this.renderLink)}
-      </div>
+      <LinkItem
+        key={label}
+        label={label}
+        href={`#${sanitizedText}`}
+        isActive={isActive}
+        onClick={() => handleClick(index)}
+      />
     );
-  }
-}
+  };
+
+  const scrollStyle = {
+    transform: `translateY(${activeIdx * SCROLL_FACTOR}rem)`,
+  };
+
+  return (
+    <div className={`sidebar-nav-links ${className}`}>
+      {_map(links, renderLink)}
+      <div className="sidebar-scroller" style={scrollStyle}></div>
+    </div>
+  );
+};
 
 Sidebar.defaultProps = {
   items: ["Link 1", "Link 2", "Link 3"],

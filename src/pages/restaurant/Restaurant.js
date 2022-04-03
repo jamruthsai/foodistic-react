@@ -11,15 +11,15 @@ import {
 import {
   DEFAULT_RESTAURANT_ID,
   INITIAL_STATE,
-} from "./constants/restaurantWrapper.general";
+} from "./constants/restaurant.general";
 
 // components
 import ErrorHandler from "../../commonComponents/errorHandler";
 import Spinner from "../../commonComponents/loader/spinner";
-import DishItems from "../dishItems";
-import SubHeader from "../subHeader";
+import DishItems from "../../components/dishItems";
+import SubHeader from "../../components/subHeader";
 
-class RestaurantWrapper extends React.Component {
+class Restaurant extends React.Component {
   state = INITIAL_STATE;
 
   componentDidMount() {
@@ -27,30 +27,30 @@ class RestaurantWrapper extends React.Component {
   }
 
   fetchRestaurant() {
-    getRestaurantDetails(DEFAULT_RESTAURANT_ID)
-      .then(this.handleRestaurntDetailsSuccess)
-      .then(this.handleDishItemsSuccess)
+    Promise.allSettled([
+      getRestaurantDetails(DEFAULT_RESTAURANT_ID),
+      getDishItems(DEFAULT_RESTAURANT_ID),
+    ])
+      .then(this.handleRestaurntSuccess)
       .catch(this.handleFetchError)
       .finally(this.setAsLoaded);
   }
 
-  handleRestaurntDetailsSuccess = (restaurantDetails) => {
+  handleRestaurntSuccess = ([restaurantDetailsRes, dishItemsRes]) => {
+    const restaurantDetails = restaurantDetailsRes?.value;
+    const dishItems = dishItemsRes?.value;
+
+    const dishes = dishItems?.dishes;
+
     this.setState({
       restaurantDetails,
-    });
-
-    return getDishItems(DEFAULT_RESTAURANT_ID);
-  };
-
-  handleDishItemsSuccess = ({ dishes }) => {
-    this.setState({
       dishItems: dishes,
     });
   };
 
-  handleFetchError = (error) => {
+  handleFetchError = () => {
     this.setState({
-      error,
+      hasError: true,
     });
   };
 
@@ -66,15 +66,14 @@ class RestaurantWrapper extends React.Component {
   }
 
   render() {
-    const { isLoading, error, restaurantDetails } = this.state;
+    const { isLoading, hasError, restaurantDetails } = this.state;
 
     if (isLoading) {
       return <Spinner text="Loading..." />;
     }
 
-    if (!restaurantDetails && error) {
-      const { message } = error;
-      return <ErrorHandler message={message} />;
+    if (!restaurantDetails || hasError) {
+      return <ErrorHandler />;
     }
 
     return (
@@ -86,4 +85,4 @@ class RestaurantWrapper extends React.Component {
   }
 }
 
-export default RestaurantWrapper;
+export default Restaurant;

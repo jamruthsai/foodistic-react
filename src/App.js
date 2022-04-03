@@ -1,6 +1,6 @@
 // components
 import Header from "./components/header";
-import RestaurantWrapper from "./components/restaurantWrapper";
+import Restaurant from "./pages/restaurant";
 
 //css
 import "./app.css";
@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Header />
-      <RestaurantWrapper />
+      <Restaurant />
     </>
   );
 }

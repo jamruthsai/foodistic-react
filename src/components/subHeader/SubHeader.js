@@ -1,11 +1,11 @@
 // react
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
 // prop-types
 import PropTypes from "prop-types";
 
-// reselect
-import { defaultMemoize } from "reselect";
+// constants
+import { DEFAULT_RESTAURANT_DETAILS } from "./constants/subHeader.general";
 
 //helpers
 import breadCrumbConfig from "./helpers/subHeader.breadCrumbConfig";
@@ -23,29 +23,6 @@ import Offers from "./components/offers";
 // css
 import "./subHeader.css";
 
-const renderPlaceholder = ({
-  ratingIcon,
-  ratingValue,
-  ratingCount,
-  deliveryTime,
-  cost,
-  count,
-}) => {
-  return (
-    <>
-      <Placeholder
-        icon={ratingIcon}
-        title={ratingValue.toFixed(1)}
-        subtitle={`${ratingCount}+ ratings`}
-      />
-      <Placeholder title={`${deliveryTime} mins`} subtitle="Delivery Time" />
-      <Placeholder title={cost} subtitle={`Cost for ${count}`} />
-    </>
-  );
-};
-
-const getBreadCrumbConfig = defaultMemoize(breadCrumbConfig);
-
 const SubHeader = (props) => {
   const { restaurantDetails } = props;
 
@@ -62,7 +39,29 @@ const SubHeader = (props) => {
   const cost = restaurantReader.cost(restaurantDetails);
   const count = restaurantReader.count(restaurantDetails);
 
-  const crumbs = getBreadCrumbConfig(city, locality, name);
+  const renderPlaceholder = useCallback(
+    (icon) => {
+      return (
+        <>
+          <Placeholder
+            icon={icon}
+            title={ratingValue.toFixed(1)}
+            subtitle={`${ratingCount}+ ratings`}
+          />
+          <Placeholder
+            title={`${deliveryTime} mins`}
+            subtitle="Delivery Time"
+          />
+          <Placeholder title={cost} subtitle={`Cost for ${count}`} />
+        </>
+      );
+    },
+    [ratingValue, ratingCount, deliveryTime, cost, count]
+  );
+
+  const crumbs = useMemo(() => {
+    return breadCrumbConfig(city, locality, name);
+  }, [city, locality, name]);
 
   return (
     <>
@@ -75,13 +74,6 @@ const SubHeader = (props) => {
             category={category}
             street={street}
             locality={locality}
-            additionalInfo={{
-              ratingCount,
-              ratingValue,
-              deliveryTime,
-              cost,
-              count,
-            }}
             renderAdditionalInfo={renderPlaceholder}
           />
           <Offers offers={offers} />
@@ -93,23 +85,7 @@ const SubHeader = (props) => {
 };
 
 SubHeader.defaultProps = {
-  thumbnail: "Thumbnail",
-  name: "Restaurnt Name",
-  category: "Food category",
-  street: "street",
-  locality: "locality",
-  city: "city",
-  offers: [
-    {
-      discount: "UPTO 25% OFF ON XYZ CARDS",
-      coupon: "FOODIE",
-    },
-  ],
-  ratingCount: 20,
-  ratingValue: 4.1,
-  deliveryTime: 40,
-  cost: 500,
-  count: "two",
+  restaurantDetails: DEFAULT_RESTAURANT_DETAILS,
 };
 
 SubHeader.propTypes = {
@@ -126,12 +102,12 @@ SubHeader.propTypes = {
         coupon: PropTypes.string,
       })
     ),
+    ratingCount: PropTypes.number,
+    ratingValue: PropTypes.number,
+    deliveryTime: PropTypes.number,
+    cost: PropTypes.number,
+    count: PropTypes.string,
   }),
-  ratingCount: PropTypes.number,
-  ratingValue: PropTypes.number,
-  deliveryTime: PropTypes.number,
-  cost: PropTypes.number,
-  count: PropTypes.string,
 };
 
 export default SubHeader;

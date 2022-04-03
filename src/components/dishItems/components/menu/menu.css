@@ -1,5 +1,4 @@
 .menu-items {
-  flex-grow: 1;
   padding-top: var(--dish-top-padding);
   padding-left: 2rem;
 }

@@ -20,8 +20,8 @@ const DishItems = (props) => {
   const sidebarLinks = _keys(dishItems);
 
   return (
-    <main className="dish flex">
-      <div className="dish-items flex justify-content-space-between">
+    <main className="dish">
+      <div className="dish-items flex">
         <Sidebar links={sidebarLinks} className="sidebar-links" />
         <Menu items={dishItems} className="menu-items" />
       </div>

@@ -3,7 +3,7 @@ import _last from "lodash/last";
 import _reduce from "lodash/reduce";
 
 //helpers
-import { generateUrl } from "../../../utility/helpers";
+import { sanitizeText } from "../../../utility/sanitizeText";
 
 // constants
 const ROOT_URL = "/city";
@@ -23,13 +23,13 @@ const getLastItemPath = (list, index) => {
 };
 
 const createCrumb = (crumbList, crumbItem, index, items) => {
-  const url = generateUrl(crumbItem);
+  const sanitizedText = sanitizeText(crumbItem);
 
   const lastItemPath = getLastItemPath(crumbList, index);
 
   const crumb = {
     text: crumbItem,
-    path: `${lastItemPath}/${url}`,
+    path: `${lastItemPath}/${sanitizedText}`,
     isUrl: !isLastItem(items, crumbItem),
   };
 

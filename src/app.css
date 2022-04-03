@@ -8,7 +8,7 @@
   --background-color: #dedede;
   --box-shadow-point-25: rgba(0, 0, 0, 0.25);
   --grey-shade-border: 0.5px solid var(--grey-text);
-  --restaurant-section-height: 250px;
+  --restaurant-section-height: 15.625rem;
   --dish-top-padding: 5rem;
   --dish-item-button-padding-top-bottom: 7px;
   --dish-item-button-padding-left-right: 8px;

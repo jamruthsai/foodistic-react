@@ -8,12 +8,15 @@ import menuItemReader from "../../readers/MenuItemReader";
 import PrimaryButton from "../../../../../../commonComponents/primaryButton";
 
 // helpers
-import { getCurrencySymbol, getIcon } from "../../../../../../utility/helpers";
+import { getCurrencySymbol } from "../../../../../../utility/getCurrencySymbol";
+import { getDishIcon } from "../../../../../../utility/getDishIcon";
 
 // css
-import "./menuRow.css";
+import "./menuItem.css";
 
-const MenuRow = function ({ item }) {
+const MenuItem = function (props) {
+  const { item } = props;
+
   const name = menuItemReader.name(item);
   const type = menuItemReader.type(item);
   const currency = menuItemReader.currency(item);
@@ -21,9 +24,9 @@ const MenuRow = function ({ item }) {
   const description = menuItemReader.description(item);
 
   return (
-    <div className="item-row">
+    <div className="menu-item">
       <div>
-        <img src={getIcon(type)} alt={type} className="icon" />
+        <img src={getDishIcon(type)} alt={type} className="icon" />
         <h3>{name}</h3>
         <p>
           {getCurrencySymbol(currency)} {price}
@@ -35,7 +38,7 @@ const MenuRow = function ({ item }) {
   );
 };
 
-MenuRow.defaultProps = {
+MenuItem.defaultProps = {
   item: {
     type: "veg",
     name: "Item Name",
@@ -45,7 +48,7 @@ MenuRow.defaultProps = {
   },
 };
 
-MenuRow.propTypes = {
+MenuItem.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.string,
     name: PropTypes.string,
@@ -55,4 +58,4 @@ MenuRow.propTypes = {
   }),
 };
 
-export default MenuRow;
+export default MenuItem;
